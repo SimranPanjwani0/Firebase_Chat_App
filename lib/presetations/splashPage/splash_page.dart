@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
 
-  navigateToLogIn({required BuildContext context}) {
+  void navigateToLogIn({required BuildContext context}) {
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacementNamed(
         context,

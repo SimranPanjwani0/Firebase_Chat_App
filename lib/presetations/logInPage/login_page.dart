@@ -1,3 +1,8 @@
+import 'package:chat_app/appRoutes/app_routes.dart';
+import 'package:chat_app/extensions.dart';
+import 'package:chat_app/helpers/auth_helper.dart';
+import 'package:chat_app/helpers/todo_helper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LogInPage extends StatelessWidget {
@@ -5,19 +10,18 @@ class LogInPage extends StatelessWidget {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    Size s = MediaQuery.sizeOf(context);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Padding(
         padding: const EdgeInsets.all(
           16,
         ),
         child: Column(
           children: [
-            SizedBox(
-              height: s.height * 0.2,
-            ),
+            250.h,
             const Text(
               "LogIn",
               style: TextStyle(
@@ -26,9 +30,7 @@ class LogInPage extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            SizedBox(
-              height: s.height * 0.05,
-            ),
+            40.h,
             TextFormField(
               controller: emailController,
               decoration: const InputDecoration(
@@ -65,9 +67,7 @@ class LogInPage extends StatelessWidget {
                 labelText: 'Email',
               ),
             ),
-            SizedBox(
-              height: s.height * 0.02,
-            ),
+            20.h,
             TextFormField(
               controller: passwordController,
               decoration: const InputDecoration(
@@ -104,23 +104,50 @@ class LogInPage extends StatelessWidget {
                 labelText: 'Password',
               ),
             ),
-            SizedBox(
-              height: s.height * 0.05,
-            ),
+            30.h,
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () async {
+                AuthHelper.instance
+                    .signIn(
+                        email: emailController.text,
+                        password: passwordController.text)
+                    .then(
+                  (value) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        backgroundColor: Colors.green,
+                        content: Text(
+                          "Sign In Successfully !!!",
+                        ),
+                      ),
+                    );
+                    Navigator.pushNamed(
+                      context,
+                      AppRoutes.instance.home,
+                    );
+                  },
+                );
+
+                // TodoHelper.tHelper.addUser(user: user).
+                //
+                // if (user != null) {
+                //
+                // }
+              },
               child: const Text("LogIn"),
             ),
-            SizedBox(
-              height: s.height * 0.03,
-            ),
-            const Divider(),
+            5.h,
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text("Don't have an account?"),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      AppRoutes.instance.signUp,
+                    );
+                  },
                   child: const Text(
                     "Sign Up",
                     style: TextStyle(
@@ -128,6 +155,54 @@ class LogInPage extends StatelessWidget {
                       decorationColor: Colors.blue,
                       color: Colors.blue,
                     ),
+                  ),
+                ),
+              ],
+            ),
+            15.h,
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Divider(
+                    height: 2,
+                  ),
+                ),
+                Text("   Or LogIn with    "),
+                Expanded(
+                  child: Divider(
+                    height: 2,
+                  ),
+                ),
+              ],
+            ),
+            10.h,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () async {
+                    AuthHelper.instance.signInWithGoogle().then(
+                      (value) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            backgroundColor: Colors.green,
+                            content: Text(
+                              "Sign In Successfully !!!",
+                            ),
+                          ),
+                        );
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.instance.home,
+                        );
+                      },
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.g_mobiledata_rounded,
+                    size: 40,
+                    color: Colors.blue,
                   ),
                 ),
               ],

@@ -1,5 +1,6 @@
 import 'package:chat_app/appRoutes/app_routes.dart';
 import 'package:chat_app/helpers/auth_helper.dart';
+import 'package:chat_app/helpers/todo_helper.dart';
 import 'package:flutter/material.dart';
 
 class GuestLogInPage extends StatelessWidget {
@@ -31,19 +32,26 @@ class GuestLogInPage extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      AuthHelper.instance.anonymousLogIn().then(
-                            (value) =>
-                                ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                backgroundColor: Colors.green,
-                                content: Text("You are logged in as guest"),
-                              ),
-                            ),
+                      TodoHelper.tHelper
+                          .addUser(
+                            user: AuthHelper.instance.auth.currentUser!,
+                          )
+                          .then(
+                            (value) => AuthHelper.instance
+                                .anonymousLogIn()
+                                .then((value) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  backgroundColor: Colors.green,
+                                  content: Text("You are logged in as guest"),
+                                ),
+                              );
+                              Navigator.pushReplacementNamed(
+                                context,
+                                AppRoutes.instance.home,
+                              );
+                            }),
                           );
-                      Navigator.pushReplacementNamed(
-                        context,
-                        AppRoutes.instance.home,
-                      );
                     },
                     child: Container(
                       height: s.height * 0.05,
